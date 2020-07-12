@@ -1,7 +1,6 @@
 FROM python:3.8.3-alpine
-    RUN apk --update add git postgresql-client py3-virtualenv
+    RUN apk --update add git py3-virtualenv postgresql-client postgresql-dev gcc python3-dev musl-dev
     ENV PYTHONUNBUFFERED 1
-    ENV CLEAR_CACHE 0
     ENV VIRTUAL_ENV=/venv
     ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
@@ -16,9 +15,4 @@ FROM python:3.8.3-alpine
     # Create user and group
     RUN addgroup --gid 1000 ze-backend
     RUN adduser --uid 1000 --ingroup ze-backend --shell /bin/bash --home "$(pwd)" --disabled-password ze-backend
-    COPY --chown=ze-backend:ze-backend . /code/
-    WORKDIR /code
     USER ze-backend
-
-    # Run application (remove it later)
-    CMD ["python", "manage.py", "runserver", "0:8000"]
