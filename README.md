@@ -19,6 +19,9 @@ cd ze-backend-code-challenge
 docker-compose up -d --build
 docker-compose exec backend python manage.py migrate --noinput
 
+docker exec -it ze_backend /bin/ash
+docker-compose down --volumes
+
 ## 3. Challenge resolution
 ...
 

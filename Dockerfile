@@ -1,5 +1,18 @@
 FROM python:3.8.3-alpine
+
+    # Install application libs
     RUN apk --update add git py3-virtualenv postgresql-client postgresql-dev gcc python3-dev musl-dev
+
+    # Install geolocation libs
+    RUN apk add --no-cache \
+                --upgrade \
+                --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+        geos \
+        proj \
+        gdal \
+        binutils
+
+    # Set env vars
     ENV PYTHONUNBUFFERED 1
     ENV VIRTUAL_ENV=/venv
     ENV PATH="$VIRTUAL_ENV/bin:$PATH"

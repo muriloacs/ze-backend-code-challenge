@@ -1,3 +1,4 @@
 Django==3.0.8
 psycopg2-binary==2.8.5
-graphene_django
+postgis==1.0.4
+graphene_django==2.12.0

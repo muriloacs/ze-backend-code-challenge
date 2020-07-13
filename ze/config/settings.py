@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,6 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    'django.contrib.gis',
+
+    # Private
+    'ze.partner'
 ]
 
 MIDDLEWARE = [
@@ -69,14 +74,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ze.config.wsgi.application'
-
+GDAL_LIBRARY_PATH = '/usr/lib/libgdal.so.27'
+GEOS_LIBRARY_PATH = '/usr/lib/libgeos_c.so.1'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': os.environ.get('DJANGO_DATABASE_NAME', 'ze'),
         'USER': os.environ.get('DJANGO_DATABASE_USER', 'postgres'),
         'PASSWORD': os.environ.get('DJANGO_DATABASE_PASSWORD', ''),

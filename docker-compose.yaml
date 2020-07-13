@@ -11,7 +11,7 @@ services:
       - seccomp:unconfined
 
   db:
-    image: postgres:9.6.18-alpine
+    image: postgis/postgis:12-master
     container_name: ze_db
     ports:
       - "${DJANGO_DATABASE_PORT:-5432}:5432"
@@ -23,7 +23,7 @@ services:
       - POSTGRES_PASSWORD=ze
       - POSTGRES_DB=ze
     volumes:
-      - dbdata:/var/lib/postgresql/data
+      - dbdata:/var/lib/postgis/data
 
   backend:
     build:
