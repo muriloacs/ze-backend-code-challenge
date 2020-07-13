@@ -11,7 +11,7 @@ services:
       - seccomp:unconfined
 
   db:
-    image: postgres:9.6.18-alpine
+    image: postgis/postgis:12-master
     container_name: ze_db
     ports:
       - "${DJANGO_DATABASE_PORT:-5432}:5432"
@@ -20,15 +20,14 @@ services:
     security_opt:
       - seccomp:unconfined
     environment:
-      - POSTGRES_PASSWORD=ze
       - POSTGRES_DB=ze
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=ze
     volumes:
-      - dbdata:/var/lib/postgresql/data
+      - dbdata:/var/lib/postgis/data
 
   backend:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    build: .
     container_name: ze_backend
     ports:
       - 8000:8000
@@ -44,7 +43,7 @@ services:
       - DJANGO_DATABASE_HOST=db
     volumes:
       - ./:/code/
-    command: python manage.py runserver 0.0.0.0:8000
+    command: dockerize -wait tcp://db:5432 -timeout 120s -- python manage.py runserver 0.0.0.0:8000
     working_dir: /code/
     depends_on:
       - db

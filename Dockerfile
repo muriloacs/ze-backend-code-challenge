@@ -1,5 +1,27 @@
 FROM python:3.8.3-alpine
-    RUN apk --update add git py3-virtualenv postgresql-client postgresql-dev gcc python3-dev musl-dev
+
+    # Install application libs
+    RUN apk add --no-cache \
+                --update \
+        git py3-virtualenv postgresql-client postgresql-dev gcc python3-dev musl-dev openssl
+
+    # Install geolocation libs
+    RUN apk add --no-cache \
+                --upgrade \
+                --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+        geos \
+        proj \
+        gdal \
+        binutils
+
+    # Install dockerize
+    ENV DOCKERIZE_VERSION v0.6.1
+    RUN wget \
+        https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+        && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+        && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+
+    # Set env vars
     ENV PYTHONUNBUFFERED 1
     ENV VIRTUAL_ENV=/venv
     ENV PATH="$VIRTUAL_ENV/bin:$PATH"
