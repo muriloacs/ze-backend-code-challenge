@@ -13,14 +13,12 @@ This project was built on top of the following stack:
 
 ## 2. Installation
 
-docker stop $(docker ps -a -q)
-
 cd ze-backend-code-challenge
-docker-compose up -d --build
-docker-compose exec backend python manage.py migrate --noinput
 
-docker exec -it ze_backend /bin/ash
-docker-compose down --volumes
+docker stop $(docker ps -a -q)
+docker-compose up -d --build
+docker-compose run backend python manage.py migrate --noinput
+docker-compose exec backend python manage.py createsuperuser
 
 ## 3. Challenge resolution
 ...
