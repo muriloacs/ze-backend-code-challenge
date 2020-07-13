@@ -2,4 +2,8 @@
 
 from django.db import models
 
-# Create your models here.
+
+class Partner(models.Model):
+    tradingName = models.CharField(max_length=100)
+    ownerName = models.CharField(max_length=100)
+    document = models.CharField(max_length=100, unique=True)
