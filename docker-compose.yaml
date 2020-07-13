@@ -37,7 +37,7 @@ services:
     security_opt:
       - seccomp:unconfined
     environment:
-      - DJANGO_SETTINGS_MODULE=ze.settings
+      - DJANGO_SETTINGS_MODULE=ze.config.settings
       - DJANGO_DATABASE_NAME=ze
       - DJANGO_DATABASE_USER=postgres
       - DJANGO_DATABASE_PASSWORD=ze
