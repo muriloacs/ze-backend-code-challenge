@@ -12,7 +12,12 @@ This project was built on top of the following stack:
 - **Database:** Postgres
 
 ## 2. Installation
-...
+
+docker stop $(docker ps -a -q)
+
+cd ze-backend-code-challenge
+docker-compose up -d --build
+docker-compose exec backend python manage.py migrate --noinput
 
 ## 3. Challenge resolution
 ...

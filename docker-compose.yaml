@@ -1,0 +1,59 @@
+version: '3'
+services:
+  redis:
+    image: redis:6.0.5-alpine
+    container_name: ze_redis
+    ports:
+      - "${DJANGO_REDIS_PORT:-6379}:6379"
+    networks:
+      - backend_network
+    security_opt:
+      - seccomp:unconfined
+
+  db:
+    image: postgres:9.6.18-alpine
+    container_name: ze_db
+    ports:
+      - "${DJANGO_DATABASE_PORT:-5432}:5432"
+    networks:
+      - backend_network
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      - POSTGRES_PASSWORD=ze
+      - POSTGRES_DB=ze
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: ze_backend
+    ports:
+      - 8000:8000
+    networks:
+      - backend_network
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      - DJANGO_SETTINGS_MODULE=ze.settings
+      - DJANGO_DATABASE_NAME=ze
+      - DJANGO_DATABASE_USER=postgres
+      - DJANGO_DATABASE_PASSWORD=ze
+      - DJANGO_DATABASE_HOST=db
+    volumes:
+      - ./:/code/
+    command: python manage.py runserver 0.0.0.0:8000
+    working_dir: /code/
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  dbdata:
+    driver: local
+
+networks:
+    backend_network:
+      driver: bridge
