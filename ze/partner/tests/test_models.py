@@ -23,7 +23,7 @@ class PartnerTestCase(TestCase):
             pdvs_json = json.loads(f.read())
 
         for pdv in pdvs_json['pdvs']:
-            poligons = [Polygon(polygon) for polygon in pdv['coverageArea']['coordinates'][0]]
+            poligons = [Polygon(polygon[0]) for polygon in pdv['coverageArea']['coordinates']]
             coverage_area = MultiPolygon(*poligons)
             address = Point(pdv['address']['coordinates'])
             self.partners.append(mommy.make(Partner,
