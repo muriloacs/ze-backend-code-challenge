@@ -19,6 +19,7 @@ docker stop $(docker ps -a -q)
 docker-compose up -d --build
 docker-compose run backend python manage.py migrate --noinput
 docker-compose exec backend python manage.py createsuperuser
+docker-compose exec backend python manage.py test --keepdb
 
 ## 3. Challenge resolution
 ...
