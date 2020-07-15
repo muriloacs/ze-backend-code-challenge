@@ -9,6 +9,7 @@ class Partner(models.Model):
     document = models.CharField(max_length=50, blank=False, unique=True)
     coverage_area = models.MultiPolygonField(srid=4326, null=False)
     address = models.PointField(null=False)
+    objects = models.Manager()
 
     def __str__(self):
         return self.trading_name
