@@ -29,7 +29,35 @@ docker-compose exec backend python manage.py test --keepdb
 ...
 
 ### 3.1. Create a partner:
-...
+mutation {
+  partner(
+    input: {
+      tradingName: "Foo2",
+      ownerName: "Bar2",
+      document: "SP100700TO",
+      coverageArea: {type: "MultiPolygon", coordinates: [[[[8.988174792345296, 7.305908202108059], [9.297306855044836, 7.673950194244314], [8.966471297361368, 7.855224608281604], [8.906780006290315, 7.399291991157497], [8.97732320720076, 7.316894530231506], [8.982749040383606, 7.322387694293275], [8.988174792345296, 7.305908202108059]]]]},
+      address: {type: "Point", coordinates: [6.740986207824642, 6.225814818469395]}
+    },
+  )
+{
+    success
+    partner {
+      id
+      tradingName
+      ownerName
+      document
+      coverageArea {
+        type
+        coordinates
+      }
+      address {
+        type
+        coordinates
+      }
+    }
+  }
+}
+
 
 ### 3.2. Load partner by id:
 query {

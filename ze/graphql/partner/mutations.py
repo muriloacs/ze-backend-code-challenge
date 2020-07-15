@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from graphene import Boolean, Field, Mutation, String
+from graphene import Boolean, Field, Mutation
+from graphql_geojson import Geometry
 
-from ze.partner.models import Partner
+from ...partner.models import Partner
+from .inputs import PartnerInput
 from .types import PartnerType
 
 
@@ -11,20 +13,18 @@ class PartnerMutation(Mutation):
     partner = Field(PartnerType)
 
     class Arguments:
-        trading_name = String(required=True)
-        owner_name = String(required=True)
-        document = String(required=True)
+        input = PartnerInput(required=True)
 
-    def mutate(self, info, **kwargs):
+    @classmethod
+    def mutate(cls, root, info, input):  # noqa
         try:
-            partner = Partner.objects.create(trading_name=kwargs.get('trading_name'),
-                                             owner_name=kwargs.get('owner_name'),
-                                             document=kwargs.get('document'),
-                                             coverage_area=kwargs.get('coverage_area'),
-                                             address=kwargs.get('address'))
+            partner_data = input.__dict__
+            partner_data.update({'coverage_area': Geometry.parse_value(partner_data['coverage_area'])})
+            partner_data.update({'address': Geometry.parse_value(partner_data['address'])})
+            partner = Partner.objects.create(**partner_data)
             success = True
-        except Exception as e:
+        except Exception:  # noqa
             partner = None
             success = False
 
-        return PartnerMutation(success=success, partner=partner)
+        return cls(success=success, partner=partner)
