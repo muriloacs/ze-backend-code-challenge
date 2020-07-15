@@ -41,8 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'django.contrib.gis',
 
+    # Third-party
+    'graphene_django',
+
     # Private
-    'ze.partner'
+    'ze.partner',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +132,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Graphene
+GRAPHENE = {
+    'SCHEMA': 'ze.graphql.schema.schema',
+    'MIDDLEWARE': (
+        'graphene_django.debug.DjangoDebugMiddleware',
+    )
+}

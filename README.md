@@ -17,6 +17,10 @@ cd ze-backend-code-challenge
 
 docker stop $(docker ps -a -q)
 docker-compose up -d --build
+docker-compose logs -f
+
+http://localhost:8000/admin
+
 docker-compose exec backend python manage.py migrate --noinput
 docker-compose exec backend python manage.py createsuperuser
 docker-compose exec backend python manage.py test --keepdb

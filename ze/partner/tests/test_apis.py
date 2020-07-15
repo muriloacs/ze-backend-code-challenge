@@ -88,8 +88,10 @@ class PartnerTestCase(GraphQLTestCase):
 
         response = self.query(
             '''
-            mutation partner($partnerInput: PartnerInput!) {
-                partner(partnerInput: $partnerInput) {
+            mutation partner($tradingName: TradingName!, $ownerName: OwnerName!, $document: Document!
+                             $coverageArea: CoverageArea!, $address: Address!) {
+                partner(tradingName: $tradingName, ownerName: $ownerName, document: $document, 
+                        coverageArea: $coverageArea, address: $address) {
                     partner {
                         id
                         trading_name
@@ -102,8 +104,8 @@ class PartnerTestCase(GraphQLTestCase):
             }
             ''',
             op_name='partner',
-            input_data={'trading_name': trading_name, 'owner_name': owner_name, 'document': document,
-                        'coverage_area': coverage_area, 'address': address}
+            input_data={'tradingName': trading_name, 'ownerName': owner_name, 'document': document,
+                        'coverageArea': coverage_area, 'address': address}
         )
 
         self.assert_response(response, fields={
