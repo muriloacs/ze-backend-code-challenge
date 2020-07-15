@@ -3,8 +3,10 @@
 import json
 
 from graphene_django.utils.testing import GraphQLTestCase
+from graphql_relay import to_global_id
 
-from ze.graphql.schema import schema
+from ...graphql.schema import schema
+from ...graphql.partner.types import PartnerType
 from ..utils import load_partner_test_data
 
 
@@ -15,103 +17,109 @@ class PartnerTestCase(GraphQLTestCase):
     def setUp(self):
         self.partners = [partner for partner in load_partner_test_data()]
 
-    def assert_response(self, response, fields):
-        self.assertResponseNoErrors(response)
-        content = json.loads(response.content)
-        for key, value in fields.items():
-            self.assertEquals(content[key], value)
+    def assertFields(self, result, partner, partner_global_id):
+        result_content = result.data['partner']
+        self.assertEquals(result_content['id'], partner_global_id)
+        self.assertEquals(result_content['tradingName'], partner.trading_name)
+        self.assertEquals(result_content['ownerName'], partner.owner_name)
+        self.assertEquals(result_content['document'], partner.document)
+        self.assertEquals(result_content['coverageArea'], json.loads(partner.coverage_area.geojson))
+        self.assertEquals(result_content['address'], json.loads(partner.address.geojson))
 
     def test_query_get_partner_by_id(self):
         partner = self.partners[0]
-
-        response = self.query(
+        partner_global_id = to_global_id(PartnerType._meta.name, partner.id)
+        result = self.GRAPHQL_SCHEMA.execute(
             '''
-            query partner($id: Int!){
+            query partner($id: ID!){
                 partner(id: $id) {
                     id
-                    trading_name
-                    owner_name
+                    tradingName
+                    ownerName
                     document
-                    coverage_area
-                    address
+                    coverageArea {
+                      type
+                      coordinates
+                    }
+                    address {
+                      type
+                      coordinates
+                    }
                 }
             }
             ''',
-            op_name='partner',
-            variables={'id': partner['id']}
+            variables={'id': partner_global_id}
         )
+        self.assertFields(result, partner, partner_global_id)
 
-        self.assert_response(response, fields={
-            'id': partner['id'],
-            'trading_name': partner['trading_name'],
-            'owner_name': partner['owner_name'],
-            'document': partner['document'],
-            'coverage_area': partner['coverage_area'],
-            'address': partner['address'],
-        })
-
-    def test_query_search_partner_by_location(self):
-        partner = self.partners[2]
-
-        response = self.query(
-            '''
-            query partner($location: LocationInput!){
-                partner(location: $location) {
-                    id
-                    trading_name
-                    owner_name
-                    document
-                    coverage_area
-                    address
-                }
-            }
-            ''',
-            op_name='partner',
-            input_data={'lat': '-38.59825', 'long': '-3.774185'}
-        )
-
-        self.assert_response(response, fields={
-            'id': partner['id'],
-            'trading_name': partner['trading_name'],
-            'owner_name': partner['owner_name'],
-            'document': partner['document'],
-            'coverage_area': partner['coverage_area'],
-            'address': partner['address'],
-        })
+    # def test_query_search_partner_by_location(self):
+    #     partner = self.partners[2]
+    #     partner_global_id = to_global_id(PartnerType._meta.name, partner.id)
+    #     result = self.GRAPHQL_SCHEMA.execute(
+    #         '''
+    #         query partner($location: LocationInput!){
+    #             partner(location: $location) {
+    #                 id
+    #                 tradingName
+    #                 ownerName
+    #                 document
+    #                 coverageArea {
+    #                   type
+    #                   coordinates
+    #                 }
+    #                 address {
+    #                   type
+    #                   coordinates
+    #                 }
+    #             }
+    #         }
+    #         ''',
+    #         variables={'location': {'lat': -38.59825, 'long': -3.774185}}
+    #     )
+    #     self.assertFields(result, partner, partner_global_id)
 
     def test_mutation_create_partner(self):
         trading_name = 'foo'
         owner_name = 'bar'
         document = '900XP800SP'
-        coverage_area = [[[[30, 20], [45, 40], [10, 40], [30, 20]]]]
-        address = [-46.57421, -21.785741]
+        coverage_area = {'type': 'MultiPolygon', 'coordinates': [[[[30, 20], [45, 40], [10, 40], [30, 20]]]]}
+        address = {'type': 'Point', 'coordinates': [-46.57421, -21.785741]}
 
-        response = self.query(
+        result = self.GRAPHQL_SCHEMA.execute(
             '''
-            mutation partner($tradingName: TradingName!, $ownerName: OwnerName!, $document: Document!
-                             $coverageArea: CoverageArea!, $address: Address!) {
-                partner(tradingName: $tradingName, ownerName: $ownerName, document: $document, 
-                        coverageArea: $coverageArea, address: $address) {
+            mutation partner($input: PartnerInput!) {
+                partner(input: $input) {
+                    success 
                     partner {
                         id
-                        trading_name
-                        owner_name
+                        tradingName
+                        ownerName
                         document
-                        coverage_area
-                        address
+                        coverageArea {
+                            type
+                            coordinates
+                        }
+                        address {
+                            type
+                            coordinates
+                        }
                     }
                 }
             }
             ''',
-            op_name='partner',
-            input_data={'tradingName': trading_name, 'ownerName': owner_name, 'document': document,
-                        'coverageArea': coverage_area, 'address': address}
+            variables={'input': {
+                'tradingName': trading_name,
+                'ownerName': owner_name,
+                'document': document,
+                'coverageArea': coverage_area,
+                'address': address
+            }}
         )
 
-        self.assert_response(response, fields={
-            'trading_name': trading_name,
-            'owner_name': owner_name,
-            'document': document,
-            'coverage_area': coverage_area,
-            'address': address,
-        })
+        result_content = result.data['partner']['partner']
+        self.assertTrue(result.data['partner']['success'])
+        self.assertEquals(result_content['tradingName'], trading_name)
+        self.assertEquals(result_content['ownerName'], owner_name)
+        self.assertEquals(result_content['document'], document)
+        self.assertEquals(result_content['coverageArea'], coverage_area)
+        self.assertEquals(result_content['address'], address)
