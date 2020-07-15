@@ -32,7 +32,44 @@ docker-compose exec backend python manage.py test --keepdb
 ...
 
 ### 3.2. Load partner by id:
-...
+query {
+  partner (id: "UGFydG5lclR5cGU6MQ==") {
+    id
+    tradingName
+    ownerName
+    document
+    coverageArea {
+      type
+      coordinates
+    }
+    address {
+      type
+      coordinates
+    }
+  }
+}
 
 ### 3.3. Search partner:
 ...
+
+
+query {
+  allPartners {
+    edges {
+      node {
+        id
+        tradingName
+        ownerName
+        document
+        coverageArea {
+          type
+          coordinates
+        }
+        address {
+          type
+          coordinates
+        }
+      }
+    }
+  }
+}

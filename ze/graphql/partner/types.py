@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from graphene import relay
-from graphql_geojson import GeoJSONType
+from graphene_django.types import DjangoObjectType
+from graphql_geojson import converter  # noqa
 
 from ze.partner.models import Partner
 
 
-class PartnerType(GeoJSONType):
+class PartnerType(DjangoObjectType):
 
     class Meta:
         model = Partner
         filter_fields = ['id']
         interfaces = (relay.Node, )
-        fields = ('trading_name', 'owner_name', 'document', 'coverage_area')
-        geojson_field = 'coverage_area'
