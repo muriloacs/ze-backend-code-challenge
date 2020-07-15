@@ -35,8 +35,8 @@ mutation {
       tradingName: "Foo2",
       ownerName: "Bar2",
       document: "SP100700TO",
-      coverageArea: {type: "MultiPolygon", coordinates: [[[[8.988174792345296, 7.305908202108059], [9.297306855044836, 7.673950194244314], [8.966471297361368, 7.855224608281604], [8.906780006290315, 7.399291991157497], [8.97732320720076, 7.316894530231506], [8.982749040383606, 7.322387694293275], [8.988174792345296, 7.305908202108059]]]]},
-      address: {type: "Point", coordinates: [6.740986207824642, 6.225814818469395]}
+      coverageArea: {type: "MultiPolygon", coordinates: [[[[30, 20], [45, 40], [10, 40], [30, 20]]],[[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]]},
+      address: {type: "Point", coordinates: [-46.57421, -21.785741]}
     },
   )
 {
@@ -58,7 +58,6 @@ mutation {
   }
 }
 
-
 ### 3.2. Load partner by id:
 query {
   partner (id: "UGFydG5lclR5cGU6MQ==") {
@@ -77,10 +76,25 @@ query {
   }
 }
 
-### 3.3. Search partner:
-...
+### 3.3. Search partner by location:
+query {
+  partner (lat: 9.055862678251549, long: 7.493147848993504) {
+    id
+    tradingName
+    ownerName
+    document
+    coverageArea {
+      type
+      coordinates
+    }
+    address {
+      type
+      coordinates
+    }
+  }
+}
 
-
+### 3.4. Search all partners:
 query {
   allPartners {
     edges {

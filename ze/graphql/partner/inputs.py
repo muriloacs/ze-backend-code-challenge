@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from graphene import Field, InputObjectType, String
+from graphene import Field, Float, InputObjectType, String
 from graphene.types.generic import GenericScalar
+
+
+class LocationInput(InputObjectType):
+    lat = Float()
+    long = Float()
 
 
 class GeometryInput(InputObjectType):

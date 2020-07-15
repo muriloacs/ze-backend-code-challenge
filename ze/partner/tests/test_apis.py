@@ -52,31 +52,31 @@ class PartnerTestCase(GraphQLTestCase):
         )
         self.assertFields(result, partner, partner_global_id)
 
-    # def test_query_search_partner_by_location(self):
-    #     partner = self.partners[2]
-    #     partner_global_id = to_global_id(PartnerType._meta.name, partner.id)
-    #     result = self.GRAPHQL_SCHEMA.execute(
-    #         '''
-    #         query partner($location: LocationInput!){
-    #             partner(location: $location) {
-    #                 id
-    #                 tradingName
-    #                 ownerName
-    #                 document
-    #                 coverageArea {
-    #                   type
-    #                   coordinates
-    #                 }
-    #                 address {
-    #                   type
-    #                   coordinates
-    #                 }
-    #             }
-    #         }
-    #         ''',
-    #         variables={'location': {'lat': -38.59825, 'long': -3.774185}}
-    #     )
-    #     self.assertFields(result, partner, partner_global_id)
+    def test_query_search_partner_by_location(self):
+        partner = self.partners[2]
+        partner_global_id = to_global_id(PartnerType._meta.name, partner.id)
+        result = self.GRAPHQL_SCHEMA.execute(
+            '''
+            query partner($location: LocationInput!){
+                partner(location: $location) {
+                    id
+                    tradingName
+                    ownerName
+                    document
+                    coverageArea {
+                      type
+                      coordinates
+                    }
+                    address {
+                      type
+                      coordinates
+                    }
+                }
+            }
+            ''',
+            variables={'location': {'lat': -38.59825, 'long': -3.774185}}
+        )
+        self.assertFields(result, partner, partner_global_id)
 
     def test_mutation_create_partner(self):
         trading_name = 'foo'
