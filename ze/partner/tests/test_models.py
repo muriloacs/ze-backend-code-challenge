@@ -1,44 +1,26 @@
 # -*- coding: utf-8 -*-
 
-import os
-import json
-
-from django.conf import settings
-from django.contrib.gis.geos import Point, Polygon, MultiPolygon
+from django.contrib.gis.geos import Point
 from django.db import IntegrityError
 from django.test import TestCase
 
 from model_mommy import mommy
 
 from ..models import Partner
+from ..utils import load_partner_test_data
 
 
 class PartnerTestCase(TestCase):
 
-    partners = []
-
     def setUp(self):
-        pdvs_file_path = os.path.join(settings.BASE_DIR, 'partner/tests/files/pdvs.json')
-        with open(pdvs_file_path, 'r') as f:
-            pdvs_json = json.loads(f.read())
-
-        for pdv in pdvs_json['pdvs']:
-            poligons = [Polygon(polygon[0]) for polygon in pdv['coverageArea']['coordinates']]
-            coverage_area = MultiPolygon(*poligons)
-            address = Point(pdv['address']['coordinates'])
-            self.partners.append(mommy.make(Partner,
-                                            trading_name=pdv['tradingName'],
-                                            owner_name=pdv['ownerName'],
-                                            document=pdv['document'],
-                                            coverage_area=coverage_area,
-                                            address=address))
+        self.partners = [partner for partner in load_partner_test_data()]
 
     def test_partner_not_found_for_point(self):
-        point = Point((-46.13451, -1.356126))  # this place isn't nearby any partner
+        point = Point((-46.13451, -1.356126))  # this point isn't nearby any partner
         self.assertFalse(Partner.objects.filter(coverage_area__contains=point).exists())
 
     def test_partner_found_for_point(self):
-        point = Point((-38.59825, -3.774185))  # this place is nearby partner with id 3
+        point = Point((-38.59825, -3.774185))  # this point is nearby partner with id 3
         self.assertTrue(Partner.objects.filter(coverage_area__contains=point).exists())
         self.assertEquals(Partner.objects.get(coverage_area__intersects=point).document, self.partners[2].document)
 
