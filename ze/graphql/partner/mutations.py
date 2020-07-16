@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import logging
+
 from graphene import Field, Mutation
 from graphql import GraphQLError  # noqa
 from graphql_geojson import Geometry
@@ -7,6 +9,8 @@ from graphql_geojson import Geometry
 from .inputs import PartnerInput
 from .types import PartnerType
 from ze.partner.models import Partner
+
+logger = logging.getLogger(__name__)
 
 
 class PartnerMutation(Mutation):
@@ -24,4 +28,6 @@ class PartnerMutation(Mutation):
             partner = Partner.objects.create(**partner_data)
             return cls(partner=partner)
         except Exception as e:
-            raise GraphQLError('Could not create partner due to: {}'.format(e))
+            msg = 'Could not create partner due to: {}'.format(e)
+            logger.error(msg)
+            raise GraphQLError(msg)

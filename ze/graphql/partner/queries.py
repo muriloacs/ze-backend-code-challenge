@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import logging
+
 from django.contrib.gis.geos import Point
 
 from graphene import ObjectType, Field, ID
@@ -10,6 +12,8 @@ from ..utils import from_graphene_id
 from .inputs import LocationInput
 from .types import PartnerType
 from ze.partner.models import Partner
+
+logger = logging.getLogger(__name__)
 
 
 class PartnerQuery(ObjectType):
@@ -24,7 +28,9 @@ class PartnerQuery(ObjectType):
             try:
                 return Partner.objects.get(pk=from_graphene_id(partner_id))
             except Exception:
-                raise GraphQLError('Could not find any partner with id {}'.format(str(partner_id)))
+                msg = 'Could not find any partner with id {}'.format(str(partner_id))
+                logger.error(msg)
+                raise GraphQLError(msg)
 
         if location:
             point = Point((location['lat'], location['long']))

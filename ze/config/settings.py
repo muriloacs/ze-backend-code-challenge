@@ -133,6 +133,35 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '[%(asctime)s.%(msecs)03dZ] [%(process)d] [%(name)s] [%(levelname)s] %(message)s',
+            'datefmt': '%Y-%m-%dT%H:%M:%S',  # keep this the same as gunicorn
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': os.getenv('CONSOLE_LOG_FORMATTER', 'simple'),
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+    },
+}
+
 # Graphene
 GRAPHENE = {
     'SCHEMA': 'ze.graphql.schema.schema',
