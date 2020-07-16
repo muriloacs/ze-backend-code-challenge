@@ -1,15 +1,5 @@
 version: '3'
 services:
-  redis:
-    image: redis:6.0.5-alpine
-    container_name: ze_redis
-    ports:
-      - "${DJANGO_REDIS_PORT:-6379}:6379"
-    networks:
-      - backend_network
-    security_opt:
-      - seccomp:unconfined
-
   db:
     image: postgis/postgis:12-master
     container_name: ze_db
@@ -47,7 +37,6 @@ services:
     working_dir: /code/
     depends_on:
       - db
-      - redis
 
 volumes:
   dbdata:
