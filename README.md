@@ -70,7 +70,7 @@ This application is able to create partners and search for them through either a
 The location search ensures to seek the nearest partner which the coverage area includes the location.
 APIs are exposed through the GraphQL endpoint: http://localhost:8000/graphql.
 
-Database tables are properly indexed in order to make search faster.
+Database table is properly indexed in order to make search faster.
 
 I tried to keep the project clean and the code readable to humans as I always do :)
 
