@@ -77,6 +77,7 @@ I tried to keep the project clean and the code readable to humans as I always do
 Now let's play around with the API: http://localhost:8000/graphql
 
 ### 3.1. Create a partner:
+Create a partner and copy the returned id so you can use it in the next Query.
 ```
 mutation {
   partner(
@@ -108,6 +109,7 @@ mutation {
 ```
 
 ### 3.2. Load partner by id:
+Use here the partner id that was returned in the Mutation.
 ```
 query {
   partner (id: "UGFydG5lclR5cGU6MQ==") {
@@ -128,6 +130,7 @@ query {
 ```
 
 ### 3.3. Search partner by location:
+After saving some partners you can query by location (lat/long).
 ```
 query {
   partner (location: {lat: 9.055862678251549, long: 7.493147848993504}) {
@@ -148,6 +151,7 @@ query {
 ```
 
 ### 3.4. Search all partners:
+In case you want to search all partners.
 ```
 query {
   allPartners {
