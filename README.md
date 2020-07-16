@@ -40,7 +40,6 @@ mutation {
     },
   )
 {
-    success
     partner {
       id
       tradingName

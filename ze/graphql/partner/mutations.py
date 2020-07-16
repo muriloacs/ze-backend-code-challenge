@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from graphene import Boolean, Field, Mutation
+from graphene import Field, Mutation
+from graphql import GraphQLError  # noqa
 from graphql_geojson import Geometry
 
 from .inputs import PartnerInput
@@ -9,7 +10,6 @@ from ze.partner.models import Partner
 
 
 class PartnerMutation(Mutation):
-    success = Boolean()
     partner = Field(PartnerType)
 
     class Arguments:
@@ -22,9 +22,6 @@ class PartnerMutation(Mutation):
             partner_data.update({'coverage_area': Geometry.parse_value(partner_data['coverage_area'])})
             partner_data.update({'address': Geometry.parse_value(partner_data['address'])})
             partner = Partner.objects.create(**partner_data)
-            success = True
-        except Exception:  # noqa
-            partner = None
-            success = False
-
-        return cls(success=success, partner=partner)
+            return cls(partner=partner)
+        except Exception as e:
+            raise GraphQLError('Could not create partner due to: {}'.format(e))

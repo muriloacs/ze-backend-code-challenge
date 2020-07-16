@@ -89,7 +89,6 @@ class PartnerTestCase(GraphQLTestCase):
             '''
             mutation partner($input: PartnerInput!) {
                 partner(input: $input) {
-                    success 
                     partner {
                         id
                         tradingName
@@ -117,7 +116,6 @@ class PartnerTestCase(GraphQLTestCase):
         )
 
         result_content = result.data['partner']['partner']
-        self.assertTrue(result.data['partner']['success'])
         self.assertEquals(result_content['tradingName'], trading_name)
         self.assertEquals(result_content['ownerName'], owner_name)
         self.assertEquals(result_content['document'], document)

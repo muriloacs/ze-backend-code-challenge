@@ -5,8 +5,8 @@ from graphene.types.generic import GenericScalar
 
 
 class LocationInput(InputObjectType):
-    lat = Float()
-    long = Float()
+    lat = Field(Float, required=True)
+    long = Field(Float, required=True)
 
 
 class GeometryInput(InputObjectType):
