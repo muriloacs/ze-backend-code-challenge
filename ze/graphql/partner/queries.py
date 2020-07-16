@@ -6,10 +6,10 @@ from django.contrib.gis.geos import Point
 from graphene import ObjectType, Field, ID
 from graphene_django.filter import DjangoFilterConnectionField
 
-from ...partner.models import Partner
 from ..utils import from_graphene_id
 from .inputs import LocationInput
 from .types import PartnerType
+from ze.partner.models import Partner
 
 
 class PartnerQuery(ObjectType):

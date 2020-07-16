@@ -4,7 +4,7 @@ from graphene import relay
 from graphene_django.types import DjangoObjectType
 from graphql_geojson import converter  # noqa
 
-from ...partner.models import Partner
+from ze.partner.models import Partner
 
 
 class PartnerType(DjangoObjectType):

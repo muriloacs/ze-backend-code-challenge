@@ -5,9 +5,9 @@ import json
 from graphene_django.utils.testing import GraphQLTestCase
 from graphql_relay import to_global_id
 
-from ...graphql.schema import schema
-from ...graphql.partner.types import PartnerType
 from ..utils import load_partner_test_data
+from ze.graphql.schema import schema
+from ze.graphql.partner.types import PartnerType
 
 
 class PartnerTestCase(GraphQLTestCase):

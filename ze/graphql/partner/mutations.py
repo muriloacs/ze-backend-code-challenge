@@ -3,9 +3,9 @@
 from graphene import Boolean, Field, Mutation
 from graphql_geojson import Geometry
 
-from ...partner.models import Partner
 from .inputs import PartnerInput
 from .types import PartnerType
+from ze.partner.models import Partner
 
 
 class PartnerMutation(Mutation):
