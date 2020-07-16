@@ -68,7 +68,8 @@ I set the Github project to only allow "Squash and Merge" on PRs so the Git hist
 
 This application is able to create partners and search for them through either an ID or by location.
 The location search ensures to seek the nearest partner which the coverage area includes the location.
-APIs are exposed through the GraphQL endpoint: http://localhost:8000/graphql
+APIs are exposed through the GraphQL endpoint: http://localhost:8000/graphql.
+
 Database tables are properly indexed in order to make search faster.
 
 I tried to keep the project clean and the code readable to humans as I always do :)
