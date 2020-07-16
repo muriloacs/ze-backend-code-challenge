@@ -18,4 +18,4 @@ class Mutation(ObjectType):
     partner = PartnerMutation.Field()
 
 
-schema = Schema(query=Query, mutation=Mutation)
+schema = Schema(query=Query, mutation=Mutation)  # noqa

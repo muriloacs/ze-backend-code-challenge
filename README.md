@@ -78,12 +78,14 @@ Now let's play around with the API: http://localhost:8000/graphql
 
 ### 3.1. Create a partner:
 Create a partner and copy the returned id so you can use it in the next Query.
+
+ps: You may try to create partners with same document. It must return an error since it's unique.
 ```
 mutation {
   partner(
     input: {
-      tradingName: "Foo2",
-      ownerName: "Bar2",
+      tradingName: "Foo",
+      ownerName: "Bar",
       document: "SP100700TO",
       coverageArea: {type: "MultiPolygon", coordinates: [[[[30, 20], [45, 40], [10, 40], [30, 20]]],[[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]]},
       address: {type: "Point", coordinates: [-46.57421, -21.785741]}
@@ -153,7 +155,7 @@ query {
 ```
 
 ### 3.4. Search all partners:
-In case you want to search all partners.
+Just in case you want to search all partners.
 ```
 query {
   allPartners {
