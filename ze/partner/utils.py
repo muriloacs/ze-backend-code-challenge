@@ -12,6 +12,10 @@ from .models import Partner
 
 
 def load_partner_test_data():
+    """
+    Load test data from JSON file.
+    :return:
+    """
     pdvs_file_path = os.path.join(settings.BASE_DIR, 'partner/tests/files/pdvs.json')
     with open(pdvs_file_path, 'r') as f:
         pdvs_json = json.loads(f.read())
