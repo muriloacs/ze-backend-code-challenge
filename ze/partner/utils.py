@@ -13,7 +13,7 @@ from .models import Partner
 
 def load_partner_test_data():
     """
-    Load test data from JSON file.
+    Load test data from JSON file. For testing purpose only.
     :return:
     """
     pdvs_file_path = os.path.join(settings.BASE_DIR, 'partner/tests/files/pdvs.json')

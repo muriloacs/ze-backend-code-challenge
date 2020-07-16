@@ -74,7 +74,7 @@ class PartnerTestCase(GraphQLTestCase):
                 }
             }
             ''',
-            variables={'location': {'lat': -38.59825, 'long': -3.774185}}
+            variables={'location': {'lat': -38.59825, 'long': -3.774185}}  # near to partner 3 and in its coverage area
         )
         self.assertFields(result, partner, partner_global_id)
 

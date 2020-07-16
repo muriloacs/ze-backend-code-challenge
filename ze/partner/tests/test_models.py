@@ -24,6 +24,14 @@ class PartnerTestCase(TestCase):
         self.assertTrue(Partner.objects.filter(coverage_area__contains=point).exists())
         self.assertEquals(Partner.objects.get(coverage_area__intersects=point).document, self.partners[2].document)
 
+    def test_nearest_partner_from_location(self):
+        point = Point((-46.66770, -23.659360))  # this point is nearby 2 partners ids 9 and 29, but nearest to 9
+        partner_documents = Partner.objects.filter(coverage_area__intersects=point).values_list('document', flat=True)
+        self.assertGreater(partner_documents.count(), 1)
+        self.assertIn(self.partners[8].document, partner_documents)
+        self.assertIn(self.partners[28].document, partner_documents)
+        self.assertEquals(Partner.objects.search_nearest_from_location(point).document, self.partners[8].document)
+
     def test_document_must_be_unique(self):
         with self.assertRaises(IntegrityError):
             mommy.make(Partner,

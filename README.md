@@ -37,9 +37,14 @@ Once it's done, you can check logs by running:
 ```shell
 docker-compose logs -f
 ```
+Wait until server is up and running. You will see this message:
+```
+ze_backend | Django version 3.0.8, using settings 'ze.config.settings'
+ze_backend | Starting development server at http://0.0.0.0:8000/
+ze_backend | Quit the server with CONTROL-C.
+```
 
-At this point application must be running already. Access:
-http://localhost:8000/admin
+At this point application must be running already. CTRL+C to quit the logs.
 
 Now we need to migrate the database schema:
 ```shell
@@ -51,6 +56,7 @@ In case you want to login to admin you'll need a superuser. Run:
 docker-compose exec backend python manage.py createsuperuser
 ```
 It will ask you for username, email and password.
+You can access admin: http://localhost:8000/admin
 
 Running all unit and API tests:
 ```shell
@@ -78,15 +84,17 @@ Now let's play around with the API: http://localhost:8000/graphql
 
 ### 3.1. Create a partner:
 Create a partner and copy the returned id so you can use it in the next Query.
+
+ps: You may try to create partners with same document. It must return an error since it's unique.
 ```
 mutation {
   partner(
     input: {
-      tradingName: "Foo2",
-      ownerName: "Bar2",
+      tradingName: "Foo",
+      ownerName: "Bar",
       document: "SP100700TO",
-      coverageArea: {type: "MultiPolygon", coordinates: [[[[30, 20], [45, 40], [10, 40], [30, 20]]],[[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]]},
-      address: {type: "Point", coordinates: [-46.57421, -21.785741]}
+      coverageArea: {type: "MultiPolygon", coordinates: [[[[-46.65285,-23.62214],[-46.66087,-23.6175],[-46.66919,-23.61431],[-46.67681,-23.60916],[-46.68238,-23.61879],[-46.69753,-23.61244],[-46.70271,-23.62229],[-46.70967,-23.62544],[-46.72057,-23.63543],[-46.72585,-23.64278],[-46.72505,-23.65023],[-46.72014,-23.65516],[-46.72703,-23.67252],[-46.72053,-23.6773],[-46.71904,-23.68142],[-46.71394,-23.68979],[-46.70936,-23.69737],[-46.70341,-23.69991],[-46.69105,-23.70101],[-46.68075,-23.70266],[-46.67217,-23.69696],[-46.66204,-23.69677],[-46.65157,-23.69543],[-46.63441,-23.69048],[-46.62797,-23.68686],[-46.6229,-23.67696],[-46.62727,-23.67526],[-46.63078,-23.6723],[-46.63372,-23.65602],[-46.63314,-23.65139],[-46.63118,-23.64707],[-46.62985,-23.63813],[-46.62967,-23.6336],[-46.62958,-23.62914],[-46.63482,-23.62981],[-46.64152,-23.6293],[-46.64392,-23.63054],[-46.64598,-23.63088],[-46.64736,-23.62903],[-46.64847,-23.62658],[-46.6498,-23.62405],[-46.65285,-23.62214]]]]},
+      address: {type: "Point", coordinates: [-46.66771, -23.659363]}
     },
   )
 {
@@ -135,7 +143,7 @@ After saving some partners you can query by location (lat/long).
 The search ensures to find the nearest partner which the coverage area includes the location.
 ```
 query {
-  partner (location: {lat: 9.055862678251549, long: 7.493147848993504}) {
+  partner (location: {lat: -46.66700, long: -23.659300}) {
     id
     tradingName
     ownerName
@@ -153,7 +161,7 @@ query {
 ```
 
 ### 3.4. Search all partners:
-In case you want to search all partners.
+Just in case you want to search all partners.
 ```
 query {
   allPartners {
