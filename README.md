@@ -131,6 +131,7 @@ query {
 
 ### 3.3. Search partner by location:
 After saving some partners you can query by location (lat/long).
+
 The search ensures to find the nearest partner which the coverage area includes the location.
 ```
 query {
